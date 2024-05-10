@@ -25,12 +25,12 @@ $(if $(prefix),,$(eval prefix := /usr))
 $(if $(XBIN_DIR),,$(eval XBIN_DIR := $(BIN_DIR)))
 
 # Build tools: options
-INCLUDE_MERGED		:= $(addprefix $(MROOT),$(INCLUDE_MROOT)) $(addprefix $(CROOT),$(INCLUDE_COOT)) $(INCLUDE)
-CFLAGS_MERGED		:= $(CFLAGS_INTERNAL) $(CFLAGS) $(INCLUDE_CC)
+INCLUDE_MERGED		= $(addprefix $(MROOT),$(INCLUDE_MROOT)) $(addprefix $(CROOT),$(INCLUDE_COOT)) $(INCLUDE)
+CFLAGS_MERGED		= $(CFLAGS_INTERNAL) $(CFLAGS) $(INCLUDE_CC)
 CXXFLAGS_MERGED		:= $(CFLAGS_MERGED) $(CXXFLAGS_INTERNAL) $(CXXFLAGS)
 LDFLAGS_SHARED		:= -shared
 LDFLAGS_STATIC		:= -static
-LDFLAGS_MERGED		:= $(LDFLAGS_INTERNAL) $(LDFLAGS)
+LDFLAGS_MERGED		= $(LDFLAGS_INTERNAL) $(LDFLAGS)
 
 # Dir: Install
 INSTALL_DIR	:= $(DESTDIR)/$(prefix)/
@@ -57,6 +57,12 @@ DETECTED_C_FILES	:= $(wildcard $(MROOT)$(SRC_DIR_EX)*.c)
 ALL_C_FILES			:= $(DETECTED_C_FILES)
 ALL_SRC_NAMES		:= $(basename $(notdir $(ALL_C_FILES)))
 ALL_OBJ_FILES		:= $(addprefix $(BUILD_DIR_EX),$(addsuffix $(EXT_OBJ), $(ALL_SRC_NAMES)))
+
+# Custom command
+CUSTOM_CMD_STATIC_APP_EX	= $(if $(CUSTOM_CMD_STATIC_APP),$(CUSTOM_CMD_STATIC_APP),$(CUSTOM_CMD))
+CUSTOM_CMD_SHARED_APP_EX	= $(if $(CUSTOM_CMD_SHARED_APP),$(CUSTOM_CMD_SHARED_APP),$(CUSTOM_CMD))
+CUSTOM_CMD_STATIC_LIB_EX	= $(if $(CUSTOM_CMD_STATIC_LIB),$(CUSTOM_CMD_STATIC_LIB),$(CUSTOM_CMD))
+CUSTOM_CMD_SHARED_LIB_EX	= $(if $(CUSTOM_CMD_SHARED_LIB),$(CUSTOM_CMD_SHARED_LIB),$(CUSTOM_CMD))
 
 # Recipe
 not-configurated:
@@ -85,13 +91,13 @@ install-app: install-static-app install-shared-app
 
 install-lib: install-static-lib install-shared-lib
 
-static-app: $(OUT_DIR_EX)$(NAME)$(EXT_APP_STATIC)
+static-app: $(CUSTOM_CMD_STATIC_APP_EX) $(OUT_DIR_EX)$(NAME)$(EXT_APP_STATIC)
 
-shared-app: $(OUT_DIR_EX)$(NAME)$(EXT_APP_SHARED)
+shared-app: $(CUSTOM_CMD_SHARED_APP_EX) $(OUT_DIR_EX)$(NAME)$(EXT_APP_SHARED)
 
-static-lib: $(OUT_DIR_EX)$(NAME)$(EXT_LIB_STATIC)
+static-lib: $(CUSTOM_CMD_STATIC_LIB_EX) $(OUT_DIR_EX)$(NAME)$(EXT_LIB_STATIC)
 
-shared-lib: $(OUT_DIR_EX)$(NAME)$(EXT_LIB_SHARED)
+shared-lib: $(CUSTOM_CMD_SHARED_LIB_EX) $(OUT_DIR_EX)$(NAME)$(EXT_LIB_SHARED)
 
 install-static-app: static-app
 	@mkdir -p "$(INSTALL_DIR)/$(XBIN_DIR)"
