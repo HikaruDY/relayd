@@ -1,0 +1,26 @@
+name: Build
+
+on:
+  workflow_dispatch:
+  release:
+  push:
+    branches: [ "github" ]
+  pull_request:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Configure
+      run: ./configure --static
+    - name: Make
+      run: make
+    - name: Install
+      uses: actions/upload-artifact@v3
+      with:
+        name: relayd
+        path: bin/*
+        
