@@ -36,26 +36,29 @@
 
 #define DEBUG
 #ifdef DEBUG
-#define DPRINTF(level, ...) if (debug >= level) fprintf(stderr, __VA_ARGS__);
+	#define DPRINTF(level, ...) \
+		if(debug >= level) fprintf(stderr, __VA_ARGS__);
 #else
-#define DPRINTF(...) do {} while(0)
+	#define DPRINTF(...) \
+		do { \
+		} while(0)
 #endif
 
 #ifndef __packed
-#define __packed __attribute__((packed))
+	#define __packed __attribute__((packed))
 #endif
 
-#define __uc(c) ((unsigned char *)(c))
+#define __uc(c) ((unsigned char *) (c))
 
-#define MAC_FMT	"%02x:%02x:%02x:%02x:%02x:%02x"
+#define MAC_FMT "%02x:%02x:%02x:%02x:%02x:%02x"
 #define MAC_BUF(_c) __uc(_c)[0], __uc(_c)[1], __uc(_c)[2], __uc(_c)[3], __uc(_c)[4], __uc(_c)[5]
 
-#define IP_FMT	"%d.%d.%d.%d"
+#define IP_FMT "%d.%d.%d.%d"
 #define IP_BUF(_c) __uc(_c)[0], __uc(_c)[1], __uc(_c)[2], __uc(_c)[3]
 
 #define DUMMY_IP ((uint8_t *) "\x01\x01\x01\x01")
 
-#define DHCP_FLAG_BROADCAST	(1 << 15)
+#define DHCP_FLAG_BROADCAST (1 << 15)
 
 struct relayd_interface {
 	struct list_head list;
@@ -104,13 +107,11 @@ extern int local_route_table;
 
 void rtnl_route_set(struct relayd_host *host, struct relayd_route *route, bool add);
 
-static inline void relayd_add_route(struct relayd_host *host, struct relayd_route *route)
-{
+static inline void relayd_add_route(struct relayd_host *host, struct relayd_route *route) {
 	rtnl_route_set(host, route, true);
 }
 
-static inline void relayd_del_route(struct relayd_host *host, struct relayd_route *route)
-{
+static inline void relayd_del_route(struct relayd_host *host, struct relayd_route *route) {
 	rtnl_route_set(host, route, false);
 }
 
@@ -120,9 +121,7 @@ void relayd_del_interface_routes(struct relayd_interface *rif);
 int relayd_rtnl_init(void);
 void relayd_rtnl_done(void);
 
-struct relayd_host *relayd_refresh_host(struct relayd_interface *rif,
-					const uint8_t *lladdr,
-					const uint8_t *ipaddr);
+struct relayd_host *relayd_refresh_host(struct relayd_interface *rif, const uint8_t *lladdr, const uint8_t *ipaddr);
 void relayd_add_host_route(struct relayd_host *host, const uint8_t *ipaddr, uint8_t mask);
 void relayd_add_pending_route(const uint8_t *gateway, const uint8_t *dest, uint8_t mask, int timeout);
 
