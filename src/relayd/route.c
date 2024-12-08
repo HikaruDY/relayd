@@ -27,8 +27,13 @@
 
 #include "relayd.h"
 
-#define NLMSG_ALIGNTO        4U
-#define NLMSG_ALIGN(len) ( ((len)+NLMSG_ALIGNTO-1) & ~(NLMSG_ALIGNTO-1) )
+#if !defined(NLMSG_ALIGNTO)
+	#define NLMSG_ALIGNTO        4U
+#endif
+
+#if !defined(NLMSG_ALIGN)
+	#define NLMSG_ALIGN(len) ( ((len)+NLMSG_ALIGNTO-1) & ~(NLMSG_ALIGNTO-1) )
+#endif
 
 static struct uloop_fd rtnl_sock;
 static unsigned int rtnl_seq, rtnl_dump_seq;
