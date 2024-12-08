@@ -73,7 +73,7 @@ int uloop_fd_add(struct uloop_fd *sock, unsigned int flags);
 #endif
 
 #ifdef USE_EPOLL
-#include "uloop-epoll.c"
+#include "epoll/uloop-epoll.c"
 #endif
 
 static void waker_consume(struct uloop_fd *fd, unsigned int events)

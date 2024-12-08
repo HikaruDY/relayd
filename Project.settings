@@ -1,0 +1,4 @@
+# DESLinux app project settings
+
+NAME=relayd
+VER=1.0.0
